@@ -18,6 +18,6 @@ class AssertClassTest extends TestCase
 {
     public function testClassInstance()
     {
-        static::assertInstanceOf('EnricoStahn\JsonAssert\AssertClass', new AssertClass());
+        static::assertInstanceOf('EnricoStahn\JsonAssert\AssertClass', new AssertClass('AssertClassTest'));
     }
 }
