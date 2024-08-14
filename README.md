@@ -86,7 +86,7 @@ class MyTestCase extends \PHPUnit_Framework_TestCase
 
 ### Class
 
-In case you don't want to use the `trait` you can use the provided class wich extends from `\PHPUnit_Framework_TestCase`.
+In case you don't want to use the `trait` you can use the provided class which extends from `\PHPUnit_Framework_TestCase`.
 You can either extend your test case or use the static methods like below.
 
 ```php
