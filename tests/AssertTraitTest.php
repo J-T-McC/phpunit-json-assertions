@@ -256,7 +256,7 @@ class AssertTraitTest extends TestCase
      * @dataProvider assertJsonValueEqualsProvider
      *
      * @param string $expression
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function testAssertJsonValueEquals(string $expression, $value)
     {
@@ -267,16 +267,16 @@ class AssertTraitTest extends TestCase
 
     public function testAssertWithSchemaStore()
     {
-        $obj = new AssertTraitImpl();
+        $obj = new AssertTraitImpl('testAssertWithSchemaStore');
         $obj->setUp();
 
-        $schemaStore = $obj->testWithSchemaStore('foobar', (object)['type' => 'string']);
+        $schemaStore = $obj->testWithSchemaStore('foobar', (object) ['type' => 'string']);
 
         self::assertInstanceOf('JsonSchema\SchemaStorage', $schemaStore);
-        self::assertEquals($schemaStore->getSchema('foobar'), (object)['type' => 'string']);
+        self::assertEquals($schemaStore->getSchema('foobar'), (object) ['type' => 'string']);
     }
 
-    public function assertJsonValueEqualsProvider(): array
+    public static function assertJsonValueEqualsProvider(): array
     {
         return [
             ['foo', '123'],
@@ -300,7 +300,7 @@ class AssertTraitTest extends TestCase
         self::assertEquals($expected, AssertTraitImpl::getJsonObject($actual));
     }
 
-    public function jsonObjectProvider(): array
+    public static function jsonObjectProvider(): array
     {
         return [
             [[], []],
