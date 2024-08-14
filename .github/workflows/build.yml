@@ -5,7 +5,7 @@ jobs:
   psalm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Psalm
         uses: docker://vimeo/psalm-github-actions
@@ -56,11 +56,8 @@ jobs:
           - 8.3
         include:
           - php: 8.1
-            phpunit: 9.5.0
           - php: 8.2
-            phpunit: 9.5.0
           - php: 8.3
-            phpunit: 9.5.0
 
     steps:
       - uses: actions/checkout@v3
@@ -78,4 +75,3 @@ jobs:
       - uses: php-actions/phpunit@v3
         with:
           php_version: ${{ matrix.php }}
-          version: ${{ matrix.phpunit }}
