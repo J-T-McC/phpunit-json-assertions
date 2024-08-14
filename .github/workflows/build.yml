@@ -1,11 +1,11 @@
 name: Test
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
   psalm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Psalm
         uses: docker://vimeo/psalm-github-actions
@@ -51,16 +51,16 @@ jobs:
     strategy:
       matrix:
         php:
-          - 7.4
-          - 8.0
+          - 8.2
+          - 8.3
         include:
-          - php: 7.4
-            phpunit: 9.5.0
-          - php: 8.0
-            phpunit: 9.5.0
+          - php: 8.2
+            phpunit: 10
+          - php: 8.3
+            phpunit: 10
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache Composer dependencies
         uses: actions/cache@v2
@@ -72,7 +72,13 @@ jobs:
         with:
           php_version: ${{ matrix.php }}
 
-      - uses: php-actions/phpunit@v9
+      - uses: php-actions/phpunit@v3
         with:
           php_version: ${{ matrix.php }}
           version: ${{ matrix.phpunit }}
+          php_extensions: xdebug
+          coverage_text: true
+          bootstrap: vendor/autoload.php
+          args: --coverage-filter src tests
+        env:
+          XDEBUG_MODE: coverage

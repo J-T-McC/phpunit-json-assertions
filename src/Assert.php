@@ -63,7 +63,7 @@ trait Assert
 
         $message = '- Property: %s, Constraint: %s, Message: %s';
         $messages = array_map(function ($exception) use ($message) {
-            return sprintf($message, $exception['property'], $exception['constraint'], $exception['message']);
+            return sprintf($message, $exception['property'], $exception['constraint']['name'], $exception['message']);
         }, $validator->getErrors());
         $messages[] = '- Response: '.json_encode($content);
 

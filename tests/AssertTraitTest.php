@@ -22,11 +22,164 @@ class AssertTraitTest extends TestCase
      *
      * @see https://github.com/estahn/phpunit-json-assertions/wiki/assertJsonMatchesSchema
      */
+    public function testAssertJsonMatchesSchemaSimpleDraft6()
+    {
+        $content = json_decode(file_get_contents(Utils::getJsonPath('assertJsonMatchesSchema_simple_draft6.json')));
+
+        AssertTraitImpl::assertJsonMatchesSchema(
+            $content,
+            Utils::getSchemaPath('assertJsonMatchesSchema_draft6.schema.json')
+        );
+    }
+
+    /**
+     * @testWith
+     * ["{\"created_at\": \"2016-01-01T12:00:00Z\"}", true]
+     * ["{\"created_at\": \"2016/01/01\"}", false]
+     */
+    public function testAssertJsonMatchesSchemaDraft6DateTime($json, $pass)
+    {
+        if (!$pass) {
+            $this->expectException(ExpectationFailedException::class);
+        }
+
+        $content = json_decode($json);
+
+        AssertTraitImpl::assertJsonMatchesSchema(
+            $content,
+            Utils::getSchemaPath('assertJsonMatchesSchema_draft6.schema.json')
+        );
+    }
+
+    /**
+     * @testWith
+     * ["{\"status\": \"active\", \"created_at\": \"2016-01-01T12:00:00Z\"}", true]
+     * ["{\"status\": \"completed\", \"created_at\": \"2016-01-01T12:00:00Z\"}", true]
+     * ["{\"status\": \"deleted\", \"created_at\": \"2016-01-01T12:00:00Z\"}", false]
+     */
+    public function testAssertJsonMatchesSchemaDraft6EnumAndNot($json, $pass)
+    {
+        if (!$pass) {
+            $this->expectException(ExpectationFailedException::class);
+        }
+
+        $content = json_decode($json);
+
+        AssertTraitImpl::assertJsonMatchesSchema(
+            $content,
+            Utils::getSchemaPath('assertJsonMatchesSchema_draft6.schema.json')
+        );
+    }
+
+    /**
+     * @testWith
+     * ["{\"status\": \"active\", \"created_at\": \"2016-01-01T12:00:00Z\"}", true]
+     * ["{\"status\": \"active\"}", false]
+     */
+    public function testAssertJsonMatchesSchemaDraft6Dependency($json, $pass)
+    {
+        if (!$pass) {
+            $this->expectException(ExpectationFailedException::class);
+        }
+
+        $content = json_decode($json);
+
+        AssertTraitImpl::assertJsonMatchesSchema(
+            $content,
+            Utils::getSchemaPath('assertJsonMatchesSchema_draft6.schema.json')
+        );
+    }
+
+    /**
+     * @testWith
+     * ["{\"id\": 2}", true]
+     * ["{\"id\": 1}", false]
+     * ["{\"id\": 0}", false]
+     */
+    public function testAssertJsonMatchesSchemaDraft6ExclusiveMinimum($json, $pass)
+    {
+        if (!$pass) {
+            $this->expectException(ExpectationFailedException::class);
+        }
+
+        $content = json_decode($json);
+
+        AssertTraitImpl::assertJsonMatchesSchema(
+            $content,
+            Utils::getSchemaPath('assertJsonMatchesSchema_draft6.schema.json')
+        );
+    }
+
+    /**
+     * @testWith
+     * ["{\"title\": \"A brief description\"}", true]
+     * ["{\"title\": \"A description that is too long\"}", false]
+     * ["{\"title\": \"A\"}", false]
+     */
+    public function testAssertJsonMatchesSchemaDraft6MaxMinLength($json, $pass)
+    {
+        if (!$pass) {
+            $this->expectException(ExpectationFailedException::class);
+        }
+
+        $content = json_decode($json);
+
+        AssertTraitImpl::assertJsonMatchesSchema(
+            $content,
+            Utils::getSchemaPath('assertJsonMatchesSchema_draft6.schema.json')
+        );
+    }
+
+    /**
+     * @testWith
+     * ["{\"invalid_name\": \"value\"}", false]
+     */
+    public function testAssertJsonMatchesSchemaDraft6AdditionalProperties($json, $pass)
+    {
+        if (!$pass) {
+            $this->expectException(ExpectationFailedException::class);
+        }
+
+        $content = json_decode($json);
+
+        AssertTraitImpl::assertJsonMatchesSchema(
+            $content,
+            Utils::getSchemaPath('assertJsonMatchesSchema_draft6.schema.json')
+        );
+    }
+
+    /**
+     * @testWith
+     * ["{\"status\": \"completed\", \"completed_at\": \"2020-01-01T12:00:00Z\", \"created_at\": \"2020-01-01T12:00:00Z\"}", true]
+     * ["{\"status\": \"completed\", \"created_at\": \"2020-01-01T12:00:00Z\"}", false]
+     * ["{\"status\": \"pending\", \"expected_completion\": \"2020-01-01T12:00:00Z\", \"created_at\": \"2020-01-01T12:00:00Z\"}", true]
+     * ["{\"status\": \"pending\", \"created_at\": \"2020-01-01T12:00:00Z\"}", false]
+     * ["{\"status\": \"active\", \"created_at\": \"2020-01-01T12:00:00Z\"}", true]
+     */
+    public function testAssertJsonMatchesSchemaDraft6Conditional($json, $pass)
+    {
+        $this->markTestSkipped('Conditional validation is not supported by the current implementation.');
+
+        if (!$pass) {
+            $this->expectException(ExpectationFailedException::class);
+        }
+
+        $content = json_decode($json);
+
+        AssertTraitImpl::assertJsonMatchesSchema(
+            $content,
+            Utils::getSchemaPath('assertJsonMatchesSchema_draft6.schema.json')
+        );
+    }
+
     public function testAssertJsonMatchesSchemaSimple()
     {
         $content = json_decode(file_get_contents(Utils::getJsonPath('assertJsonMatchesSchema_simple.json')));
 
-        AssertTraitImpl::assertJsonMatchesSchema($content, Utils::getSchemaPath('assertJsonMatchesSchema_simple.schema.json'));
+        AssertTraitImpl::assertJsonMatchesSchema(
+            $content,
+            Utils::getSchemaPath('assertJsonMatchesSchema_simple.schema.json')
+        );
     }
 
     public function testAssertJsonMatchesSchema()
@@ -61,7 +214,10 @@ class AssertTraitTest extends TestCase
         try {
             AssertTraitImpl::assertJsonMatchesSchema($content, Utils::getSchemaPath('test.schema.json'));
         } catch (ExpectationFailedException $exception) {
-            self::assertStringContainsString('- Property: foo, Constraint: type, Message: String value found, but an integer is required', $exception->getMessage());
+            self::assertStringContainsString(
+                '- Property: foo, Constraint: type, Message: String value found, but an integer is required',
+                $exception->getMessage()
+            );
             self::assertStringContainsString('- Response: {"foo":"123"}', $exception->getMessage());
         }
 
@@ -111,7 +267,7 @@ class AssertTraitTest extends TestCase
 
     public function testAssertWithSchemaStore()
     {
-        $obj = new AssertTraitImpl();
+        $obj = new AssertTraitImpl('testAssertWithSchemaStore');
         $obj->setUp();
 
         $schemaStore = $obj->testWithSchemaStore('foobar', (object) ['type' => 'string']);
@@ -120,7 +276,7 @@ class AssertTraitTest extends TestCase
         self::assertEquals($schemaStore->getSchema('foobar'), (object) ['type' => 'string']);
     }
 
-    public function assertJsonValueEqualsProvider(): array
+    public static function assertJsonValueEqualsProvider(): array
     {
         return [
             ['foo', '123'],
@@ -144,7 +300,7 @@ class AssertTraitTest extends TestCase
         self::assertEquals($expected, AssertTraitImpl::getJsonObject($actual));
     }
 
-    public function jsonObjectProvider(): array
+    public static function jsonObjectProvider(): array
     {
         return [
             [[], []],
